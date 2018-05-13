@@ -1,5 +1,7 @@
 
-var SEARCH_BOX_ID = 'search_box';
+var ID_SEARCH_BOX = 'search_box';
+var ID_CONTAINER_RESULT_LIST = 'container_result_list';
+var container_result_list;
 var search_box_element;
 var search_time_out;
 
@@ -47,7 +49,7 @@ function normalize_string(_typed_value) {
         var white_space_regex = /\s/g;
         var special_char_regex = /[^\w\s]/gi;
         var trimmed_value = typed_value.replace(white_space_regex, '');
-        var normalized_value =  trimmed_value.replace(special_char_regex, '');
+        var normalized_value = trimmed_value.replace(special_char_regex, '');
         return normalized_value;
     } else {
         var caller = arguments.callee.caller.name;
@@ -70,15 +72,52 @@ function run_search(typed_value) {
     if (self.fetch) {
         fetch(search_url)
             .then(function (response) {
-                console.log(response);
-                var items = get_prop_value(response, 'items');
-            })
+                var contentType = response.headers.get("content-type");
+                if (contentType && contentType.indexOf("application/json") !== -1) {
+                    return response.json().then(function (json) {
+                        console.log(json);
+                        var items = get_prop_value(json, 'items');
+                        fill_result_list(items);
+                    });
+                } else {
+                    console.log("Oops, we haven't got JSON!");
+                }
+            });
     } else {
         // do something with XMLHttpRequest?
     }
 }
 
+function fill_result_list(items) {
+    items.forEach(item => {
+        var element_list_item = make_result_list_element_item(item);
+        container_result_list.append(element_list_item);
+    });
+    toggle_result_list();
+}
+
+function toggle_result_list() {
+    var display_state = container_result_list.style.display;
+    if (display_state === 'none') {
+        container_result_list.style.display = 'block';
+    } else {
+        container_result_list.style.display = 'none';
+    }
+}
+
+function make_result_list_element_item(item) {
+    var login = get_prop_value(item, 'login');
+    var id = get_prop_value(item, 'id');
+    var li_element = document.createElement('li');
+    li_element.id = id;
+    var span_element = document.createElement('span');
+    span_element.innerText = login;
+    li_element.append(span_element);
+    return li_element;
+}
+
 document.addEventListener('DOMContentLoaded', function () {
-    search_box_element = document.getElementById(SEARCH_BOX_ID);
+    search_box_element = document.getElementById(ID_SEARCH_BOX);
+    container_result_list = document.getElementById(ID_CONTAINER_RESULT_LIST);
     handle_search_box_events();
 });
