@@ -1,3 +1,5 @@
+import {NAME_VALUE} from './constants.js';
+
 export default class Utils {
 
     static get_prop_value(_object, _prop_name) {
@@ -58,7 +60,7 @@ export default class Utils {
 
     static clear_field_values(_content_id_selector) {
         let content = document.getElementById(_content_id_selector);
-        let value_fields = content.getElementById.
+        let value_fields = content.getElementsByClassName(NAME_VALUE);
             value_fields.forEach(field => {
                 if (field && fied) {
                     let tag_name = Utils.get_prop_value(field, 'tagName');
@@ -69,6 +71,15 @@ export default class Utils {
                     }
                 }
             });
+    }
+
+
+    static compare(a, b, prop) {
+        if (a.prop < b.prop)
+            return -1;
+        if (a.prop > b.prop)
+            return 1;
+        return 0;
     }
 
 }

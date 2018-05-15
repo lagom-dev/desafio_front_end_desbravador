@@ -10,11 +10,12 @@
   overflow: auto;
 }
 
-img.avatar_url {
+.avatar_url {
   object-fit: scale-down;
   border-radius: 100%;
   width: 100%;
 }
+
 
 .result_list {
   display: none;
@@ -29,6 +30,12 @@ img.avatar_url {
   min-height: 100px;
   padding: 20px;
 }
+
+.repos_list {
+  max-height: 30vh;
+  overflow: auto;
+}
+
 
 
 /*!

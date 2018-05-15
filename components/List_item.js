@@ -3,23 +3,22 @@ import Utils from '../Utils.js';
 
 export default class List_item {
 
-    constructor(_item, _click_callback) {
-        this.username = Utils.get_prop_value(_item, NAME_LOGIN);
-        this.user_id = Utils.get_prop_value(_item, NAME_ID);
-        this.user_data = _item;
+    constructor(_text, _id, _click_callback) {
+        this.text = _text;
+        this.id = _id;
         this.click_callback = _click_callback;
-        this.html_element = this.render_html(_item, _click_callback);
+        this.html_element = this.render_html(_click_callback);
     }
 
     selection_callback(){
-        this.click_callback(this.user_data);
+        this.click_callback(this.id);
     }
 
-    render_html(_item, _click_callback) {
+    render_html( _click_callback) {
         var li_element = document.createElement('li');
         var anchor_element = document.createElement('a');
-        anchor_element.innerText = this.username;
-        anchor_element.id = this.user_id;
+        anchor_element.innerText = this.text;
+        anchor_element.id = this.id;
         li_element.append(anchor_element);
         anchor_element.addEventListener('click', () => this.selection_callback());
         return li_element;
