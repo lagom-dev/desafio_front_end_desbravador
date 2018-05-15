@@ -1,12 +1,13 @@
-import { NAME_HTML_ELEMENT } from '../constants.js';
+import { NAME_HTML_ELEMENT, ID_RESULT_LIST } from '../constants.js';
 import Utils from '../Utils.js';
 import List_item from './List_item.js';
 
 export default class Result_list {
 
-    constructor(_html_element, _items) {
-        this.html_element = _html_element;
+    constructor(_items, _selection_callback) {
+        this.html_element = document.getElementById(ID_RESULT_LIST);
         this.handle_events();
+        this.selection_callback = _selection_callback;
         this.items = _items;
         this.fill_results();
     }
@@ -48,7 +49,7 @@ export default class Result_list {
         this.clear();
         var items = _items || this.items;
         items.forEach(item => {
-            var list_item = new List_item(item);
+            var list_item = new List_item(item, this.selection_callback);
             var html_list_item = Utils.get_prop_value(list_item, NAME_HTML_ELEMENT);
             this.html_element.append(html_list_item);
         });
